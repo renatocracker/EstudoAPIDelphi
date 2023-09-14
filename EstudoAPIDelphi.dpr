@@ -4,14 +4,22 @@ program EstudoAPIDelphi;
 
 {$R *.res}
 
-uses
-  System.SysUtils;
+uses Horse;
 
-begin
-  try
-    { TODO -oUser -cConsole Main : Insert code here }
-  except
-    on E: Exception do
-      Writeln(E.ClassName, ': ', E.Message);
-  end;
+var
+  App : THorse;
+
+  begin
+    App := THorse.Create(9000);
+
+    App.Get('/ping',
+      procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+      begin
+        Res.Send('pong');
+      end);
+
+    App.Start;
+    --THorse.Listen(9000);
+  end.
+
 end.
