@@ -1,0 +1,47 @@
+program EstudoAPIDelphi;
+
+{$APPTYPE CONSOLE}
+
+{$R *.res}
+
+uses
+  Horse, Horse.Jhonson, Horse.Commons, System.SysUtils, System.JSON;
+
+var
+  Users : TJSONArray;
+
+begin
+
+  THorse.Use(Jhonson());
+
+  Users := TJSONArray.Create;
+
+  THorse.Get('/users',
+    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+    begin
+      Res.Send<TJSONAncestor>(Users.Clone);
+    end);
+
+  THorse.Post('/users',
+    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+    var
+      User : TJSONObject;
+    begin
+      User := Req.Body<TJSONObject>.Clone as TJSONObject;
+      Users.AddElement(User);
+      Res.Send<TJSONAncestor>(User.Clone).Status(THTTPStatus.Created);
+    end);
+
+  THorse.Delete('/users/:id',
+    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+    var
+      Id : Integer;
+    begin
+      id := Req.Params.Items['id'] .ToInteger;
+      Users.Remove(Pred(id)).Free;
+      Res.Send<TJSONAncestor>(User.Clone).Status(THTTPStatus.Created);
+    end);
+
+  THorse.Listen(9000);
+end.
+
