@@ -23,9 +23,7 @@ begin
       LStream: TFileStream;
     begin
       // Now you can send your stream:
-     //LStream := TFileStream.Create(ExtractFilePath(ParamStr(0)) + 'horse.pdf', fmOpenRead);
-      LStream := TFileStream.Create('C:\Users\Renato\Documents\GitHub\EstudoAPIDelphi\img\img.jpeg', fmOpenRead);
-
+      LStream := TFileStream.Create(ExtractFilePath(ParamStr(0)) + 'horse.pdf', fmOpenRead);
       Res.Send<TStream>(LStream);
     end);
 

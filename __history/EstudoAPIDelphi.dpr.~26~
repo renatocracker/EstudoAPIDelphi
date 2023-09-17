@@ -5,8 +5,7 @@ program EstudoAPIDelphi;
 {$R *.res}
 
 uses
-  Horse, Horse.Compression, Horse.BasicAuthentication, Horse.Jhonson, Horse.Commons,
-  System.SysUtils, System.JSON, Horse.OctetStream, System.Classes;
+  Horse, Horse.Compression, Horse.BasicAuthentication, Horse.Jhonson, Horse.Commons, System.SysUtils, System.JSON;
 
 var
   Users : TJSONArray;
@@ -14,20 +13,6 @@ var
 begin
   THorse.Use(Compression()); // CHAMAR ANTES DO JHONSON
   THorse.Use(Jhonson());
-  THorse.Use(OctetStream);
-
-   // EXEMPLO STREAM
-  THorse.Get('/stream',
-    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
-    var
-      LStream: TFileStream;
-    begin
-      // Now you can send your stream:
-     //LStream := TFileStream.Create(ExtractFilePath(ParamStr(0)) + 'horse.pdf', fmOpenRead);
-      LStream := TFileStream.Create('C:\Users\Renato\Documents\GitHub\EstudoAPIDelphi\img\img.jpeg', fmOpenRead);
-
-      Res.Send<TStream>(LStream);
-    end);
 
   // AUTENTICAÇÃO
   THorse.Use(HorseBasicAuthentication(
