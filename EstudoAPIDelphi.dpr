@@ -16,18 +16,26 @@ begin
   THorse.Use(Jhonson());
   THorse.Use(OctetStream);
 
-   // EXEMPLO STREAM
-  THorse.Get('/stream',
+  // EXEMPLO STREAM
+  THorse.Get('/imagem',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     var
       LStream: TFileStream;
     begin
-      // Now you can send your stream:
-     //LStream := TFileStream.Create(ExtractFilePath(ParamStr(0)) + 'horse.pdf', fmOpenRead);
-      LStream := TFileStream.Create('C:\Users\Renato\Documents\GitHub\EstudoAPIDelphi\img\img.jpeg', fmOpenRead);
-
+      LStream := TFileStream.Create('E:\qrCode.png', fmOpenRead);
       Res.Send<TStream>(LStream);
     end);
+
+  THorse.Post('/imagem',
+    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+    var
+      LStream: TMemoryStream;
+    begin
+      LStream := Req.Body<TMemoryStream>;
+      LStream.SaveToFile('E:\estudo api.jpg');
+      Res.Send('Imagem cadastrada com sucesso.').Status(201);
+    end);
+
 
   // AUTENTICAÇÃO
   THorse.Use(HorseBasicAuthentication(
@@ -35,6 +43,7 @@ begin
     begin
       Result := AUsername.Equals('renato') and APassword.Equals('123');
     end));
+
 
     // TESTE DE COMPRESSÃO
   THorse.Get('/ping',
@@ -51,12 +60,14 @@ begin
 
   Users := TJSONArray.Create;
 
+
   // LISTAR
   THorse.Get('/users',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
       Res.Send<TJSONAncestor>(Users.Clone);
     end);
+
 
   // INSERIR
   THorse.Post('/users',
@@ -68,6 +79,7 @@ begin
       Users.AddElement(User);
       Res.Send<TJSONAncestor>(User.Clone).Status(THTTPStatus.Created);
     end);
+
 
   // EXCLUIR
   THorse.Delete('/users/:id',
