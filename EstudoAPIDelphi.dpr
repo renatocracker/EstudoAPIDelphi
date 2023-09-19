@@ -5,7 +5,7 @@ program EstudoAPIDelphi;
 {$R *.res}
 
 uses
-  Horse, Horse.Compression, Horse.BasicAuthentication, Horse.Jhonson, Horse.Commons,
+  Horse, Horse.Logger, Horse.Compression, Horse.BasicAuthentication, Horse.Jhonson, Horse.Commons,
   System.SysUtils, System.JSON, Horse.OctetStream, System.Classes;
 
 var
@@ -15,6 +15,7 @@ begin
   THorse.Use(Compression()); // CHAMAR ANTES DO JHONSON
   THorse.Use(Jhonson());
   THorse.Use(OctetStream);
+  THorse.Use(THorseLoggerLog.ne);
 
   // EXEMPLO STREAM
   THorse.Get('/imagem',

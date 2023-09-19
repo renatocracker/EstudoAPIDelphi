@@ -5,7 +5,8 @@ program EstudoAPIDelphi;
 {$R *.res}
 
 uses
-  Horse, Horse.Compression, Horse.BasicAuthentication, Horse.Jhonson, Horse.Commons, System.SysUtils, System.JSON;
+  Horse, Horse.Logger, Horse.Compression, Horse.BasicAuthentication, Horse.Jhonson, Horse.Commons,
+  System.SysUtils, System.JSON, Horse.OctetStream, System.Classes;
 
 var
   Users : TJSONArray;
@@ -13,6 +14,29 @@ var
 begin
   THorse.Use(Compression()); // CHAMAR ANTES DO JHONSON
   THorse.Use(Jhonson());
+  THorse.Use(OctetStream);
+  THorse.Use(THorseLoggerLog.NewInstance());
+
+  // EXEMPLO STREAM
+  THorse.Get('/imagem',
+    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+    var
+      LStream: TFileStream;
+    begin
+      LStream := TFileStream.Create('E:\qrCode.png', fmOpenRead);
+      Res.Send<TStream>(LStream);
+    end);
+
+  THorse.Post('/imagem',
+    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+    var
+      LStream: TMemoryStream;
+    begin
+      LStream := Req.Body<TMemoryStream>;
+      LStream.SaveToFile('E:\estudo api.jpg');
+      Res.Send('Imagem cadastrada com sucesso.').Status(201);
+    end);
+
 
   // AUTENTICAÇÃO
   THorse.Use(HorseBasicAuthentication(
@@ -20,6 +44,7 @@ begin
     begin
       Result := AUsername.Equals('renato') and APassword.Equals('123');
     end));
+
 
     // TESTE DE COMPRESSÃO
   THorse.Get('/ping',
@@ -36,12 +61,14 @@ begin
 
   Users := TJSONArray.Create;
 
+
   // LISTAR
   THorse.Get('/users',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
       Res.Send<TJSONAncestor>(Users.Clone);
     end);
+
 
   // INSERIR
   THorse.Post('/users',
@@ -53,6 +80,7 @@ begin
       Users.AddElement(User);
       Res.Send<TJSONAncestor>(User.Clone).Status(THTTPStatus.Created);
     end);
+
 
   // EXCLUIR
   THorse.Delete('/users/:id',
