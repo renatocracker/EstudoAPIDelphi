@@ -2,6 +2,14 @@
 	"hash": "d41d8cd98f00b204e9800998ecf8427e",
 	"updated": "2023-09-13T22:40:56.7319606-03:00",
 	"installedModules": {
+		"github.com/academiadocodigo/horse-paginate": {
+			"name": "horse-paginate",
+			"version": "1.0.4",
+			"hash": "bb6b3ed3d5942543199d12496e230c24",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		},
 		"github.com/dliocode/horse-utils-clientip": {
 			"name": "horse-utils-clientip",
 			"version": "0.0.8",
