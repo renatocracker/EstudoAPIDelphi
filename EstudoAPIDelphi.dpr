@@ -5,17 +5,42 @@ program EstudoAPIDelphi;
 {$R *.res}
 
 uses
-  Horse, Horse.Logger, Horse.Compression, Horse.BasicAuthentication, Horse.Jhonson, Horse.Commons,
-  System.SysUtils, System.JSON, Horse.OctetStream, System.Classes;
+  Horse,
+  Horse.Logger,
+  Horse.Logger.Provider.LogFile,
+  Horse.Compression,
+  Horse.BasicAuthentication,
+  Horse.Jhonson,
+  Horse.Commons,
+  System.SysUtils,
+  System.JSON,
+  Horse.OctetStream,
+  System.Classes;
 
 var
   Users : TJSONArray;
+  LLogFileConfig: THorseLoggerLogFileConfig;
 
 begin
   THorse.Use(Compression()); // CHAMAR ANTES DO JHONSON
   THorse.Use(Jhonson());
   THorse.Use(OctetStream);
-  THorse.Use(THorseLoggerLog.ne);
+  //THorse.Use(THorseLoggerLog.ne);
+
+  // EXEMPLO LOG
+   LLogFileConfig := THorseLoggerLogFileConfig.ne
+    .SetLogFormat('${request_clientip} [${time}] ${response_status}')
+    .SetDir('C:\Users\Renato\Documents\GitHub\EstudoAPIDelphi\log');
+
+
+  // Você também pode especificar o formato do log e o caminho onde ele será salvo:
+  // THorseLoggerManager.RegisterProvider(THorseLoggerProviderLogFile.New(LLogFileConfig));
+
+  // Aqui você definirá o provedor que será usado.
+  THorseLoggerManager.RegisterProvider(THorseLoggerProviderLogFile.New());
+
+  // É necessário adicionar o middleware no Cavalo:
+  THorse.Use(THorseLoggerManager.HorseCallback);
 
   // EXEMPLO STREAM
   THorse.Get('/imagem',
