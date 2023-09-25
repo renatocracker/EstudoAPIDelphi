@@ -10,6 +10,14 @@
 			"failed": false,
 			"changed": false
 		},
+		"github.com/bittencourtthulio/horse-etag": {
+			"name": "horse-etag",
+			"version": "1.0.4",
+			"hash": "fcd20ae56ea7907e870b88f4594e64ff",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		},
 		"github.com/dliocode/horse-utils-clientip": {
 			"name": "horse-utils-clientip",
 			"version": "0.0.8",
