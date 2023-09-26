@@ -25,12 +25,22 @@ begin
   THorse.Use(Compression()); // CHAMAR ANTES DO JHONSON
   THorse.Use(Jhonson());
   THorse.Use(OctetStream);
+  THorse.Use(eTag);
   //THorse.Use(THorseLoggerLog.ne);
 
+
   // EXEMPLO LOG
-   LLogFileConfig := THorseLoggerLogFileConfig.ne
+   LLogFileConfig := THorseLoggerLogFileConfig.new
     .SetLogFormat('${request_clientip} [${time}] ${response_status}')
     .SetDir('C:\Users\Renato\Documents\GitHub\EstudoAPIDelphi\log');
+
+  // EXEMPLO ETAG
+  THorse.Get('ping',
+    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+    begin
+      Res.Send<TJsonObject>(TJsonObject.Create.AddPair('Teste', 'Teste'));
+    end);
+
 
 
   // Você também pode especificar o formato do log e o caminho onde ele será salvo:
